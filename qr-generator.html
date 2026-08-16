@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Love Generator 💕</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(180deg, #FFE4EC 0%, #FFF0F5 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 48px;
+            color: #D14D72;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #6B3A4A;
+            font-size: 16px;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(209, 77, 114, 0.25);
+        }
+
+        .section h2 {
+            color: #D14D72;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            color: #6B3A4A;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="url"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #FFE4EC;
+            border-radius: 12px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 14px;
+            color: #6B3A4A;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="url"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #FF6FA5;
+            box-shadow: 0 0 0 3px rgba(255, 111, 165, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .color-picker input[type="color"] {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #FFE4EC;
+            border-radius: 8px;
+            cursor: pointer;
+            padding: 2px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #FF6FA5, #D14D72);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 24px rgba(209, 77, 114, 0.35);
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(209, 77, 114, 0.45);
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
+        .preview-section {
+            text-align: center;
+        }
+
+        .qr-preview {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            border: 2px solid #FFE4EC;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        #qrcode {
+            display: inline-block;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #FF6FA5, #D14D72);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 24px rgba(209, 77, 114, 0.35);
+            margin: 10px 5px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(209, 77, 114, 0.45);
+        }
+
+        .templates {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .template-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(209, 77, 114, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .template-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(209, 77, 114, 0.25);
+        }
+
+        .template-preview {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #FFE4EC, #FFF0F5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        .template-info {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .template-info h3 {
+            color: #D14D72;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .template-info p {
+            color: #6B3A4A;
+            font-size: 12px;
+        }
+
+        .love-animation {
+            display: inline-block;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            25% {
+                transform: scale(1.1);
+            }
+            50% {
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 36px;
+            }
+
+            .templates {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        canvas {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><span class="love-animation">💕</span> QR Love Generator <span class="love-animation">💕</span></h1>
+            <p class="subtitle">Buat QR Code dengan desain cantik untuk proyek Mensive Anda</p>
+        </div>
+
+        <div class="content">
+            <!-- Generator Section -->
+            <div class="section">
+                <h2>⚙️ Generator QR Code</h2>
+                
+                <div class="form-group">
+                    <label for="urlInput">URL / Link</label>
+                    <input type="url" id="urlInput" placeholder="https://example.com" value="https://github.com/yenftnn4-wq/Mensive-3-month">
+                </div>
+
+                <div class="form-group">
+                    <label for="labelInput">Label Teks (Optional)</label>
+                    <input type="text" id="labelInput" placeholder="Masukkan teks label">
+                </div>
+
+                <div class="form-group">
+                    <label>Ukuran QR Code</label>
+                    <select id="sizeSelect">
+                        <option value="200">Kecil (200x200)</option>
+                        <option value="300" selected>Sedang (300x300)</option>
+                        <option value="400">Besar (400x400)</option>
+                        <option value="500">Extra Besar (500x500)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Warna QR Code</label>
+                    <div class="color-picker">
+                        <input type="color" id="darkColor" value="#D14D72">
+                        <span>QR Code</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Warna Background</label>
+                    <div class="color-picker">
+                        <input type="color" id="lightColor" value="#FFFFFF">
+                        <span>Background</span>
+                    </div>
+                </div>
+
+                <button onclick="generateQR()">🎨 Generate QR Code</button>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="section preview-section">
+                <h2>👀 Preview</h2>
+                <div class="qr-preview">
+                    <div id="qrcode"></div>
+                </div>
+                <div>
+                    <button class="download-btn" onclick="downloadQR('png')">📥 Download PNG</button>
+                    <button class="download-btn" onclick="downloadQR('jpg')">📥 Download JPG</button>
+                </div>
+                <p style="color: #6B3A4A; font-size: 12px; margin-top: 15px;">💡 Tip: Download sebagai PNG untuk background transparan</p>
+            </div>
+        </div>
+
+        <!-- Templates Section -->
+        <div class="section">
+            <h2>🖼️ Template Desain Siap Pakai</h2>
+            <p style="color: #6B3A4A; margin-bottom: 20px; font-size: 14px;">Pilih template untuk membuat poster atau kartu dengan QR Code</p>
+            
+            <div class="templates">
+                <!-- Template 1: Instagram Story -->
+                <div class="template-card" onclick="openTemplate('instagram-story')">
+                    <div class="template-preview">📱</div>
+                    <div class="template-info">
+                        <h3>Instagram Story</h3>
+                        <p>1080x1920px - Perfect untuk Instagram</p>
+                    </div>
+                </div>
+
+                <!-- Template 2: A4 Poster -->
+                <div class="template-card" onclick="openTemplate('a4-poster')">
+                    <div class="template-preview">📄</div>
+                    <div class="template-info">
+                        <h3>A4 Poster</h3>
+                        <p>210x297mm - Ready to Print</p>
+                    </div>
+                </div>
+
+                <!-- Template 3: Business Card -->
+                <div class="template-card" onclick="openTemplate('business-card')">
+                    <div class="template-preview">🎫</div>
+                    <div class="template-info">
+                        <h3>Business Card</h3>
+                        <p>90x50mm - Kartu Ucapan</p>
+                    </div>
+                </div>
+
+                <!-- Template 4: Love Poster -->
+                <div class="template-card" onclick="openTemplate('love-poster')">
+                    <div class="template-preview">💌</div>
+                    <div class="template-info">
+                        <h3>Love Poster</h3>
+                        <p>Custom Love Design</p>
+                    </div>
+                </div>
+
+                <!-- Template 5: Square (Social Media) -->
+                <div class="template-card" onclick="openTemplate('square-social')">
+                    <div class="template-preview">⬜</div>
+                    <div class="template-info">
+                        <h3>Square Social</h3>
+                        <p>1000x1000px - FB, Twitter, Pinterest</p>
+                    </div>
+                </div>
+
+                <!-- Template 6: Wide Banner -->
+                <div class="template-card" onclick="openTemplate('wide-banner')">
+                    <div class="template-preview">🎨</div>
+                    <div class="template-info">
+                        <h3>Wide Banner</h3>
+                        <p>1200x400px - Website Banner</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQR = null;
+
+        function generateQR() {
+            const url = document.getElementById('urlInput').value;
+            const size = parseInt(document.getElementById('sizeSelect').value);
+            const darkColor = document.getElementById('darkColor').value;
+            const lightColor = document.getElementById('lightColor').value;
+
+            if (!url) {
+                alert('Masukkan URL terlebih dahulu!');
+                return;
+            }
+
+            // Hapus QR code lama
+            const qrContainer = document.getElementById('qrcode');
+            qrContainer.innerHTML = '';
+
+            // Generate QR code baru
+            currentQR = new QRCode(qrContainer, {
+                text: url,
+                width: size,
+                height: size,
+                colorDark: darkColor,
+                colorLight: lightColor,
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        function downloadQR(format) {
+            const qrCanvas = document.querySelector('#qrcode canvas');
+            
+            if (!qrCanvas) {
+                alert('Generate QR Code terlebih dahulu!');
+                return;
+            }
+
+            let link = document.createElement('a');
+            link.href = qrCanvas.toDataURL(`image/${format}`);
+            link.download = `qr-code-love.${format}`;
+            link.click();
+        }
+
+        function openTemplate(templateType) {
+            // Buat window baru untuk template
+            const width = 1200;
+            const height = 800;
+            const left = (screen.width - width) / 2;
+            const top = (screen.height - height) / 2;
+            
+            window.open(
+                `template-${templateType}.html`,
+                'template',
+                `width=${width},height=${height},left=${left},top=${top}`
+            );
+        }
+
+        // Generate QR Code default saat halaman dimuat
+        window.onload = function() {
+            generateQR();
+        };
+    </script>
+</body>
+</html>
