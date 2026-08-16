@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Poster - Mensive 💌</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(180deg, #FFE4EC 0%, #FFF0F5 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .controls {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(209, 77, 114, 0.15);
+        }
+
+        .controls h2 {
+            color: #D14D72;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            color: #6B3A4A;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+
+        input[type="text"],
+        input[type="url"],
+        input[type="color"],
+        select {
+            padding: 10px;
+            border: 2px solid #FFE4EC;
+            border-radius: 8px;
+            font-family: 'Quicksand', sans-serif;
+            color: #6B3A4A;
+        }
+
+        input[type="text"]:focus,
+        input[type="url"]:focus,
+        input[type="color"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #FF6FA5;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            min-width: 150px;
+            background: linear-gradient(135deg, #FF6FA5, #D14D72);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 8px 20px rgba(209, 77, 114, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(209, 77, 114, 0.4);
+        }
+
+        /* Poster Canvas */
+        #posterCanvas {
+            max-width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .canvas-container {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(209, 77, 114, 0.15);
+        }
+
+        @media (max-width: 768px) {
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="controls">
+            <h2>💕 Love Poster Creator</h2>
+            
+            <div class="controls-grid">
+                <div class="form-group">
+                    <label>URL / Link</label>
+                    <input type="url" id="urlInput" value="https://github.com/yenftnn4-wq/Mensive-3-month" placeholder="https://example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label>Judul Poster</label>
+                    <input type="text" id="titleInput" value="MENSIVE 💌" placeholder="Masukkan judul">
+                </div>
+
+                <div class="form-group">
+                    <label>Subtitle</label>
+                    <input type="text" id="subtitleInput" value="Proyek Spesial 3 Bulan" placeholder="Subtitle">
+                </div>
+
+                <div class="form-group">
+                    <label>Pesan</label>
+                    <input type="text" id="messageInput" value="Scan untuk membuka" placeholder="Pesan tambahan">
+                </div>
+
+                <div class="form-group">
+                    <label>Warna Utama</label>
+                    <input type="color" id="mainColor" value="#D14D72">
+                </div>
+
+                <div class="form-group">
+                    <label>Warna Aksen</label>
+                    <input type="color" id="accentColor" value="#FF6FA5">
+                </div>
+
+                <div class="form-group">
+                    <label>Tipe Poster</label>
+                    <select id="posterType">
+                        <option value="a4">A4 Poster (210x297mm)</option>
+                        <option value="square">Square (1000x1000px)</option>
+                        <option value="instagram">Instagram Story (1080x1920px)</option>
+                        <option value="banner">Banner (1200x400px)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button onclick="generatePoster()">🎨 Generate Poster</button>
+                <button onclick="downloadPoster('png')">📥 Download PNG</button>
+                <button onclick="downloadPoster('jpg')">📥 Download JPG</button>
+            </div>
+        </div>
+
+        <div class="canvas-container">
+            <canvas id="posterCanvas"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('posterCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function getPosterDimensions(type) {
+            const dpi = 300;
+            const mmToPx = dpi / 25.4;
+            
+            switch(type) {
+                case 'a4':
+                    return {
+                        width: 210 * mmToPx,
+                        height: 297 * mmToPx,
+                        dpi: dpi
+                    };
+                case 'square':
+                    return { width: 1000, height: 1000, dpi: 72 };
+                case 'instagram':
+                    return { width: 1080, height: 1920, dpi: 72 };
+                case 'banner':
+                    return { width: 1200, height: 400, dpi: 72 };
+                default:
+                    return { width: 1000, height: 1000, dpi: 72 };
+            }
+        }
+
+        function drawHeartShape(ctx, x, y, size, color) {
+            const scale = size / 100;
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            
+            // Draw heart shape
+            ctx.moveTo(x, y + 30 * scale);
+            
+            // Left curve
+            ctx.bezierCurveTo(
+                x - 35 * scale, y - 15 * scale,
+                x - 50 * scale, y,
+                x - 35 * scale, y + 25 * scale
+            );
+            
+            // Bottom point
+            ctx.bezierCurveTo(
+                x, y + 50 * scale,
+                x, y + 50 * scale,
+                x, y + 50 * scale
+            );
+            
+            // Right curve
+            ctx.bezierCurveTo(
+                x + 35 * scale, y + 25 * scale,
+                x + 50 * scale, y,
+                x + 35 * scale, y - 15 * scale
+            );
+            
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function generatePoster() {
+            const url = document.getElementById('urlInput').value;
+            const title = document.getElementById('titleInput').value;
+            const subtitle = document.getElementById('subtitleInput').value;
+            const message = document.getElementById('messageInput').value;
+            const mainColor = document.getElementById('mainColor').value;
+            const accentColor = document.getElementById('accentColor').value;
+            const posterType = document.getElementById('posterType').value;
+
+            if (!url) {
+                alert('Masukkan URL terlebih dahulu!');
+                return;
+            }
+
+            const dims = getPosterDimensions(posterType);
+            canvas.width = dims.width;
+            canvas.height = dims.height;
+
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#FFE4EC');
+            gradient.addColorStop(1, '#FFF0F5');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Decorative hearts background
+            ctx.fillStyle = `${accentColor}20`;
+            for (let i = 0; i < 5; i++) {
+                drawHeartShape(ctx, 
+                    Math.random() * canvas.width, 
+                    Math.random() * canvas.height, 
+                    40, 
+                    `${accentColor}20`
+                );
+            }
+
+            // Title
+            ctx.font = `bold ${canvas.height * 0.12}px 'Great Vibes', cursive`;
+            ctx.fillStyle = mainColor;
+            ctx.textAlign = 'center';
+            ctx.fillText(title, canvas.width / 2, canvas.height * 0.15);
+
+            // Subtitle
+            ctx.font = `${canvas.height * 0.08}px 'Quicksand', sans-serif`;
+            ctx.fillStyle = accentColor;
+            ctx.fillText(subtitle, canvas.width / 2, canvas.height * 0.25);
+
+            // Generate QR Code as image
+            setTimeout(() => {
+                const tempCanvas = document.createElement('canvas');
+                const tempQR = new QRCode({
+                    text: url,
+                    width: canvas.height * 0.35,
+                    height: canvas.height * 0.35,
+                    colorDark: mainColor,
+                    colorLight: '#FFFFFF',
+                    correctLevel: QRCode.CorrectLevel.H,
+                    useSVG: false
+                });
+
+                // Wait for QR code to be generated
+                setTimeout(() => {
+                    const qrCanvas = document.querySelector('canvas[data-qr]');
+                    if (qrCanvas) {
+                        const qrSize = canvas.height * 0.35;
+                        ctx.drawImage(qrCanvas, 
+                            (canvas.width - qrSize) / 2, 
+                            canvas.height * 0.35, 
+                            qrSize, 
+                            qrSize
+                        );
+                    }
+
+                    // Message
+                    ctx.font = `${canvas.height * 0.06}px 'Quicksand', sans-serif`;
+                    ctx.fillStyle = mainColor;
+                    ctx.fillText(message, canvas.width / 2, canvas.height * 0.85);
+
+                    // Decorative bottom hearts
+                    ctx.fillStyle = accentColor;
+                    drawHeartShape(ctx, canvas.width * 0.2, canvas.height * 0.95, 30, accentColor);
+                    drawHeartShape(ctx, canvas.width * 0.8, canvas.height * 0.95, 30, accentColor);
+                }, 100);
+            }, 100);
+        }
+
+        function downloadPoster(format) {
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL(`image/${format}`);
+            link.download = `mensive-love-poster.${format}`;
+            link.click();
+        }
+
+        // Generate default poster on load
+        window.addEventListener('load', () => {
+            setTimeout(() => generatePoster(), 200);
+        });
+    </script>
+</body>
+</html>
