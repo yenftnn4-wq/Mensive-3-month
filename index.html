@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mensive - 3 Month Project 💌</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -22,7 +23,7 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 700px;
             background: white;
             border-radius: 24px;
             padding: 40px;
@@ -45,59 +46,62 @@
         }
 
         .links-section {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
             margin-top: 30px;
         }
 
         .link-group {
-            margin-bottom: 25px;
+            background: linear-gradient(135deg, #FFF5F9, #FFEBF0);
+            padding: 20px;
+            border-radius: 16px;
+            border: 2px solid rgba(255, 111, 165, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .link-group:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(209, 77, 114, 0.2);
         }
 
         .link-group h2 {
-            font-size: 18px;
+            font-size: 16px;
             color: #FF6FA5;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
             font-weight: 700;
         }
 
-        a {
-            display: inline-block;
-            padding: 14px 24px;
-            background: linear-gradient(135deg, #FF6FA5, #D14D72);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 14px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 10px 24px rgba(209, 77, 114, 0.35);
-            width: 100%;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        a:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(209, 77, 114, 0.45);
-        }
-
-        a:active {
-            transform: scale(0.97);
-        }
-
-        .secondary-link {
-            background: rgba(255, 255, 255, 0.7);
-            color: #D14D72;
+        .qr-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 10px;
+            background: white;
+            border-radius: 12px;
             border: 2px solid #FF6FA5;
-            box-shadow: 0 8px 16px rgba(209, 77, 114, 0.2);
         }
 
-        .secondary-link:hover {
-            background: rgba(255, 255, 255, 0.9);
+        .qr-container canvas {
+            width: 120px !important;
+            height: 120px !important;
+        }
+
+        .link-label {
+            font-size: 12px;
+            color: #D14D72;
+            font-weight: 600;
+            word-break: break-word;
+            display: block;
+            margin-top: 8px;
+        }
+
+        .emoji {
+            font-size: 28px;
+            margin-bottom: 10px;
         }
 
         .footer {
@@ -108,51 +112,167 @@
             font-size: 12px;
         }
 
-        .emoji {
-            font-size: 24px;
-            margin-right: 8px;
+        .heart-animation {
+            display: inline-block;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            25% {
+                transform: scale(1.1);
+            }
+            50% {
+                transform: scale(1);
+            }
+        }
+
+        .title-emoji {
+            animation: float 3s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 36px;
+            }
+
+            .links-section {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>💌 Mensive 💌</h1>
+        <h1><span class="title-emoji">💌</span> Mensive <span class="title-emoji">💌</span></h1>
         <p>Proyek spesial untuk orang terkasih selama 3 bulan</p>
+        <p style="font-size: 14px; color: #FF6FA5; font-weight: 600;">Scan QR Code untuk membuka link 💝</p>
 
         <div class="links-section">
             <!-- Main Project -->
             <div class="link-group">
-                <h2><span class="emoji">📖</span>Proyek Utama</h2>
-                <a href="mensive_project_border_fixed.html">Buka Proyek Mensive</a>
+                <div class="emoji">📖</div>
+                <h2>Proyek Utama</h2>
+                <div class="qr-container" id="qr-project"></div>
+                <span class="link-label">Buka Proyek</span>
             </div>
 
-            <!-- Social Links -->
+            <!-- Instagram -->
             <div class="link-group">
-                <h2><span class="emoji">🌐</span>Ikuti Kami</h2>
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
+                <div class="emoji">📸</div>
+                <h2>Instagram</h2>
+                <div class="qr-container" id="qr-instagram"></div>
+                <span class="link-label">@instagram</span>
             </div>
 
-            <!-- Contact Links -->
+            <!-- Facebook -->
             <div class="link-group">
-                <h2><span class="emoji">📞</span>Hubungi Kami</h2>
-                <a href="mailto:example@email.com">Email</a>
-                <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                <div class="emoji">👥</div>
+                <h2>Facebook</h2>
+                <div class="qr-container" id="qr-facebook"></div>
+                <span class="link-label">Facebook</span>
             </div>
 
-            <!-- Resources -->
+            <!-- Twitter -->
             <div class="link-group">
-                <h2><span class="emoji">📚</span>Sumber Daya</h2>
-                <a href="https://github.com/yenftnn4-wq/Mensive-3-month" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
-                <a href="#about" class="secondary-link">Tentang Proyek</a>
+                <div class="emoji">🐦</div>
+                <h2>Twitter</h2>
+                <div class="qr-container" id="qr-twitter"></div>
+                <span class="link-label">@twitter</span>
+            </div>
+
+            <!-- Email -->
+            <div class="link-group">
+                <div class="emoji">📧</div>
+                <h2>Email</h2>
+                <div class="qr-container" id="qr-email"></div>
+                <span class="link-label">Hubungi Kami</span>
+            </div>
+
+            <!-- WhatsApp -->
+            <div class="link-group">
+                <div class="emoji">💬</div>
+                <h2>WhatsApp</h2>
+                <div class="qr-container" id="qr-whatsapp"></div>
+                <span class="link-label">Chat Kami</span>
+            </div>
+
+            <!-- GitHub -->
+            <div class="link-group">
+                <div class="emoji">🐙</div>
+                <h2>GitHub</h2>
+                <div class="qr-container" id="qr-github"></div>
+                <span class="link-label">Repository</span>
+            </div>
+
+            <!-- Love Note -->
+            <div class="link-group">
+                <div class="emoji"><span class="heart-animation">💕</span></div>
+                <h2>Love Note</h2>
+                <div class="qr-container" id="qr-love"></div>
+                <span class="link-label">Catatan Cinta</span>
             </div>
         </div>
 
         <div class="footer">
-            <p>✨ Dibuat dengan cinta untuk orang terkasih ✨</p>
-            <p>© 2026 - Semua hak dilindungi</p>
+            <p><span class="heart-animation">✨</span> Dibuat dengan cinta untuk orang terkasih <span class="heart-animation">✨</span></p>
+            <p>© 2026 - Mensive Project - Semua hak dilindungi</p>
         </div>
     </div>
+
+    <script>
+        // Konfigurasi QR Code
+        const qrConfig = {
+            width: 120,
+            height: 120,
+            colorDark: "#D14D72",
+            colorLight: "#FFFFFF",
+            correctLevel: QRCode.CorrectLevel.H
+        };
+
+        // Data links untuk QR Code
+        const qrData = [
+            { id: 'qr-project', url: window.location.href + 'mensive_project_border_fixed.html' },
+            { id: 'qr-instagram', url: 'https://instagram.com' },
+            { id: 'qr-facebook', url: 'https://facebook.com' },
+            { id: 'qr-twitter', url: 'https://twitter.com' },
+            { id: 'qr-email', url: 'mailto:example@email.com' },
+            { id: 'qr-whatsapp', url: 'https://wa.me/1234567890' },
+            { id: 'qr-github', url: 'https://github.com/yenftnn4-wq/Mensive-3-month' },
+            { id: 'qr-love', url: 'https://youtu.be/dQw4w9WgXcQ?si=love' } // Love song link
+        ];
+
+        // Generate semua QR Code
+        qrData.forEach(item => {
+            const container = document.getElementById(item.id);
+            // Hapus konten lama jika ada
+            container.innerHTML = '';
+            // Buat QR Code baru
+            new QRCode(container, {
+                text: item.url,
+                width: qrConfig.width,
+                height: qrConfig.height,
+                colorDark: qrConfig.colorDark,
+                colorLight: qrConfig.colorLight,
+                correctLevel: qrConfig.correctLevel
+            });
+        });
+    </script>
 </body>
 </html>
